@@ -1,5 +1,5 @@
 from node import Node
-from digital_signature import verify_signature
+from digital_signature import CryptoManager
 
 class Authenticator(Node):
     def __init__(self, node_id, voter_list, qkd_key_length):
@@ -18,7 +18,7 @@ class Authenticator(Node):
 
     def verify_signature(self, voter_id, signature, message):
         public_key = self.voter_list.get(voter_id)
-        return verify_signature(public_key, message.encode(), signature)
+        return CryptoManager.verify_signature(public_key, message.encode(), signature)
 
     def forward_vote(self, encoded_vote_payload, tally_node, from_voter):
         """
@@ -37,8 +37,7 @@ class Authenticator(Node):
         if from_voter_public_key is None:
             raise Exception(f"No public key for {from_voter.name}.")
 
-        from digital_signature import verify_signature
-        if not verify_signature(from_voter_public_key, encrypted_vote_bits.encode(), bytes.fromhex(encrypted_vote_signature_hex)):
+        if not CryptoManager.verify_signature(from_voter_public_key, encrypted_vote_bits.encode(), bytes.fromhex(encrypted_vote_signature_hex)):
             raise Exception(f"Signature verification of QKD channel from {from_voter.name} failed.")
 
         decoded_vote = self.receive_message(from_voter, f"{encrypted_vote_bits}|{encrypted_vote_signature_hex}")
