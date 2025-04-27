@@ -48,7 +48,7 @@ pip install .
 You can quickly simulate a quantum-secure election by running:
 
 ```python
-from quantumvoting import Voter, Authenticator, Tallier, Blockchain
+import sawty
 import time
 
 # Define choices and voters
