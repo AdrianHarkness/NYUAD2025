@@ -106,7 +106,7 @@ if blockchain.byzantine_agreement(blocks):
 ✅ Local voting simulation fully functional  
 ✅ Quantum Key Distribution with Eve attack simulation  
 ✅ Blockchain consensus + vote majority calculator  
-🕻 PyPI package publishing (done!)
+✅ PyPI package publishing: [https://pypi.org/project/sawty/0.1.0/](https://pypi.org/project/sawty/0.1.0/)
 
 ---
 
