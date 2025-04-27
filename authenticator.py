@@ -21,7 +21,26 @@ class Authenticator(Node):
         return verify_signature(public_key, message.encode(), signature)
 
     def forward_vote(self, encoded_vote_payload, tally_node, from_voter):
-        signature_hex, encoded_vote = encoded_vote_payload.split('|')
-        decoded_vote = self.receive_message(from_voter, encoded_vote)
+        """
+        - encoded_vote_payload: voter's signed identity + (vote encrypted with QKD channel)
+        - We verify voter's signature, decrypt vote, then re-encrypt it to the tally node.
+        """
+        try:
+            parts = encoded_vote_payload.split('|')
+            if len(parts) != 3:
+                raise Exception(f"Malformed vote payload: expected 3 parts, got {len(parts)} parts.")
+            voter_signature_hex, encrypted_vote_bits, encrypted_vote_signature_hex = parts
+        except ValueError:
+            raise Exception("Malformed vote payload (cannot split fields).")
+
+        from_voter_public_key = self.known_public_keys.get(from_voter.name)
+        if from_voter_public_key is None:
+            raise Exception(f"No public key for {from_voter.name}.")
+
+        from digital_signature import verify_signature
+        if not verify_signature(from_voter_public_key, encrypted_vote_bits.encode(), bytes.fromhex(encrypted_vote_signature_hex)):
+            raise Exception(f"Signature verification of QKD channel from {from_voter.name} failed.")
+
+        decoded_vote = self.receive_message(from_voter, f"{encrypted_vote_bits}|{encrypted_vote_signature_hex}")
         forwarded_vote = self.send_message(tally_node, decoded_vote)
-        return signature_hex, forwarded_vote
+        return voter_signature_hex, forwarded_vote

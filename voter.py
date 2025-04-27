@@ -5,8 +5,6 @@ class Voter(Node):
     def __init__(self, name, qkd_key_length):
         super().__init__(name, qkd_key_length)
         self.id = name
-        self.private_key = load_private_key("private_key.pem")
-        self.public_key = None  # will be provided separately or via constructor
 
     def sign_identity(self):
         """
