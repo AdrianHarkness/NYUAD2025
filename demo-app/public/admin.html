@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+
+    <h2>Create New Mapping</h2>
+    <input type="text" id="secretId" placeholder="Secret ID">
+    <input type="text" id="mappedValue" placeholder="Mapped Value">
+    <button onclick="createMapping()">Create Mapping</button>
+
+    <h2>Existing Mappings</h2>
+    <table id="mappingsTable">
+        <thead>
+            <tr>
+                <th>Secret ID</th>
+                <th>Mapped Value</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Mappings will be dynamically added here -->
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchMappings() {
+            const response = await fetch('/api/admin/mappings');
+            const mappings = await response.json();
+
+            const tableBody = document.getElementById('mappingsTable').querySelector('tbody');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            mappings.forEach(mapping => {
+                const row = tableBody.insertRow();
+                const secretIdCell = row.insertCell();
+                const mappedValueCell = row.insertCell();
+                const actionsCell = row.insertCell();
+
+                secretIdCell.textContent = mapping.secretId;
+                mappedValueCell.textContent = mapping.mappedValue;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = () => deleteMapping(mapping.secretId);
+                actionsCell.appendChild(deleteButton);
+            });
+        }
+
+        async function createMapping() {
+            const secretId = document.getElementById('secretId').value;
+            const mappedValue = document.getElementById('mappedValue').value;
+
+            try {
+                const response = await fetch('/api/admin/mappings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ secretId, mappedValue })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Mapping created successfully');
+                    fetchMappings(); // Refresh the table
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            } catch (error) {
+                console.error('Error creating mapping:', error);
+                alert(`Error: ${error.message}`);
+            }
+        }
+
+        async function deleteMapping(secretId) {
+            if (confirm(`Are you sure you want to delete the mapping for secretId: ${secretId}?`)) {
+                try {
+                    const response = await fetch(`/api/admin/mappings/${secretId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        alert(`Mapping deleted successfully`);
+                        fetchMappings(); // Refresh the table
+                    } else {
+                        alert(`Error: ${data.message}`);
+                    }
+                } catch (error) {
+                    console.error('Error deleting mapping:', error);
+                    alert(`Error: ${error.message}`);
+                }
+            }
+        }
+
+        // Initial fetch of mappings when the page loads
+        fetchMappings();
+    </script>
+</body>
+</html>

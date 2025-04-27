@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <circle cx="150" cy="150" r="120" fill="#005a9c" />
+  <path d="M100,150 a50,50 0 1,0 100,0 a50,50 0 1,0 -100,0" fill="none" stroke="#39b54a" stroke-width="12"/>
+  <path d="M130,125 l40,50 m-40,0 l40,-50" stroke="#39b54a" stroke-width="12" stroke-linecap="round"/>
+  <text x="150" y="220" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-weight="bold" font-size="48">SAWTY</text>
+</svg> 
