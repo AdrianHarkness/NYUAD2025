@@ -24,7 +24,7 @@ We ensure end-to-end ballot security, anonymity, consensus, and voter authentica
 - **Encrypted, Anonymized Ballots**: votes are end-to-end encrypted with zero leakage.
 - **Blockchain Consensus**: votes are recorded only after a Byzantine agreement between tallying nodes.
 - **Built-in Simulation Tools**: easily test small- to medium-scale elections with quantum-secure infrastructure.
-- **Demo application**: For full functionality visit https://sawty-voting.vercel.app/
+- **Demo application**: For full functionality visit https://sawty-voting.vercel.app/ and https://github.com/st6rgazing/sawty-voting
 ---
 
 ## Installation
