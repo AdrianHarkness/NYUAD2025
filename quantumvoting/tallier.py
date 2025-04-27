@@ -1,4 +1,4 @@
-from node import Node
+from .node import Node
 
 class Tallier(Node):
     def __init__(self, node_id, qkd_key_length):

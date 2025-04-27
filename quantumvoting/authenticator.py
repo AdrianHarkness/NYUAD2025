@@ -1,5 +1,5 @@
-from node import Node
-from digital_signature import CryptoManager
+from .node import Node
+from .digital_signature import CryptoManager
 
 class Authenticator(Node):
     def __init__(self, node_id, voter_list, qkd_key_length):
@@ -21,10 +21,6 @@ class Authenticator(Node):
         return CryptoManager.verify_signature(public_key, message.encode(), signature)
 
     def forward_vote(self, encoded_vote_payload, tally_node, from_voter):
-        """
-        - encoded_vote_payload: voter's signed identity + (vote encrypted with QKD channel)
-        - We verify voter's signature, decrypt vote, then re-encrypt it to the tally node.
-        """
         try:
             parts = encoded_vote_payload.split('|')
             if len(parts) != 3:

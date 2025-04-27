@@ -1,16 +1,14 @@
-from qkd import create_shared_key
-from encode_decode import encode_bitstring, decode_bitstring
-from digital_signature import CryptoManager
+from quantumvoting.qkd import create_shared_key
+from quantumvoting.encode_decode import encode_bitstring, decode_bitstring
+from quantumvoting.digital_signature import CryptoManager
 
 class Node:
     def __init__(self, name, qkd_key_length):
         self.name = name
         self.qkd_key_length = qkd_key_length
         self.qkd_channels = {}
-        self.private_key = CryptoManager.load_private_key("private_key.pem")
-        self.public_key = CryptoManager.load_public_key("public_key.pem")
-        self.known_public_keys = {}
-        self.known_public_keys[self.name] = self.public_key
+        self.private_key, self.public_key = CryptoManager.generate_keys()
+        self.known_public_keys = {self.name: self.public_key}
 
     def establish_qkd_channel(self, other_node, max_retries=3):
         retries = 0
@@ -21,7 +19,6 @@ class Node:
                 other_node.qkd_channels[self.name] = shared_key
                 self.known_public_keys[other_node.name] = other_node.public_key
                 other_node.known_public_keys[self.name] = self.public_key
-
                 print(f"Shared key established and public keys exchanged between {self.name} and {other_node.name}.\n")
                 return
             except Exception as e:
