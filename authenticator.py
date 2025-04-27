@@ -2,8 +2,8 @@ from node import Node
 from digital_signature import verify_signature
 
 class Authenticator(Node):
-    def __init__(self, node_id, voter_list, key_length):
-        super().__init__(node_id, key_length)
+    def __init__(self, node_id, voter_list, qkd_key_length):
+        super().__init__(node_id, qkd_key_length)
         self.voter_list = voter_list
         self.received_ds_table = set()
 
@@ -21,9 +21,7 @@ class Authenticator(Node):
         return verify_signature(public_key, message.encode(), signature)
 
     def forward_vote(self, encoded_vote_payload, tally_node, from_voter):
-        vote_payload = self.receive_message(from_voter, encoded_vote_payload)
-        signature_hex, vote = vote_payload.split("|")
-        if not self.verify_unique(signature_hex):
-            raise Exception("Duplicate voter detected!")
-        encoded_vote = self.send_message(tally_node, vote)
-        return encoded_vote
+        signature_hex, encoded_vote = encoded_vote_payload.split('|')
+        decoded_vote = self.receive_message(from_voter, encoded_vote)
+        forwarded_vote = self.send_message(tally_node, decoded_vote)
+        return signature_hex, forwarded_vote

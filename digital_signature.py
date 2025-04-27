@@ -4,22 +4,18 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 
 
-def generate_keys(key_size=1024):
+def generate_keys(rsa_key_size=1024):
     """
     Generates a pair of RSA keys (public and private) and saves them to files.
-    The private key is saved in PKCS8 format, and the public key is saved in SubjectPublicKeyInfo format.
     """
-    # Generate private key
     private_key = rsa.generate_private_key(
         public_exponent=65537,
-        key_size=key_size,
+        key_size=rsa_key_size,
     )
 
-
-    # Generate public key from the private key
     public_key = private_key.public_key()
 
-    # Save the private key to a file
+    # Save private key
     with open("private_key.pem", "wb") as f:
         f.write(private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
@@ -27,7 +23,7 @@ def generate_keys(key_size=1024):
             encryption_algorithm=serialization.NoEncryption()
         ))
 
-    # Save the public key to a file
+    # Save public key
     with open("public_key.pem", "wb") as f:
         f.write(public_key.public_bytes(
             encoding=serialization.Encoding.PEM,
@@ -36,10 +32,8 @@ def generate_keys(key_size=1024):
 
     return private_key, public_key
 
+
 def load_private_key(file_path):
-    """
-    Loads a private key from a PEM file.
-    """
     with open(file_path, "rb") as f:
         private_key = serialization.load_pem_private_key(
             f.read(),
@@ -47,15 +41,14 @@ def load_private_key(file_path):
         )
     return private_key
 
+
 def load_public_key(file_path):
-    """
-    Loads a public key from a PEM file.
-    """
     with open(file_path, "rb") as f:
         public_key = serialization.load_pem_public_key(
             f.read(),
         )
     return public_key
+
 
 def sign_message(private_key, message):
     """
@@ -70,11 +63,11 @@ def sign_message(private_key, message):
         hashes.SHA256()
     )
 
-    # Save the signature to a file
     with open("signature.bin", "wb") as f:
         f.write(signature)
-    
+
     return signature
+
 
 def verify_signature(public_key, message, signature):
     """
@@ -97,17 +90,14 @@ def verify_signature(public_key, message, signature):
 
 
 if __name__ == "__main__":
-    # Generate keys and save them to files
-    key_size = 1024
-    private_key, public_key = generate_keys(key_size)
+    RSA_KEY_SIZE = 1024  # Signature key size
+    private_key, public_key = generate_keys(RSA_KEY_SIZE)
 
-    # Load the keys from files
     private_key = load_private_key("private_key.pem")
     public_key = load_public_key("public_key.pem")
     message = b"Vote Team 6!"
     signature = sign_message(private_key, message)
     print(f"Signature: {signature}")
-    
-    # Verify the signature
+
     is_valid = verify_signature(public_key, message, signature)
     print(f"Signature valid: {is_valid}")

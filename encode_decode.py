@@ -1,41 +1,24 @@
 import random
 
-
 def encode_bitstring(bitstring, key):
     """
     Encodes a bitstring using a shared secret key via XOR operation.
-
-    Args:
-        bitstring (str): The bitstring to encode (e.g., '1010').
-        key (str): The shared secret key (must be the same length as bitstring).
-
-    Returns:
-        str: The encoded bitstring.
     """
-    if len(bitstring) != len(key):
-        raise ValueError("Bitstring and key must be of the same length.")
+    if len(key) < len(bitstring):
+        raise ValueError("Key must be at least as long as bitstring.")
+    key = key[:len(bitstring)]  # 🛠️ slice key to bitstring length
     return ''.join(str(int(b) ^ int(k)) for b, k in zip(bitstring, key))
-
 
 def decode_bitstring(encoded_bitstring, key):
     """
-    Decodes an encoded bitstring using the shared secret key via XOR operation.
-
-    Args:
-        encoded_bitstring (str): The encoded bitstring (e.g., '1100').
-        key (str): The shared secret key (must be the same length as encoded_bitstring).
-
-    Returns:
-        str: The original bitstring.
+    Decodes an encoded bitstring using a shared secret key via XOR operation.
     """
-    # Decoding is the same as encoding due to XOR properties
     return encode_bitstring(encoded_bitstring, key)
 
-
-# Example usage
+# ex
 if __name__ == "__main__":
     original = ''.join(str(random.randint(0, 1)) for _ in range(5))
-    
+
     secret_key = "10101"
 
     print(f"Original: {original}")
