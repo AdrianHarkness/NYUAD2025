@@ -1,8 +1,8 @@
 # SAWTY | صوتي  
 *Quantum-Secure Electronic Voting*
 
-[![Release](https://img.shields.io/github/release/AdrianHarkness/quantumvoting.svg?style=popout-square)](https://github.com/AdrianHarkness/quantumvoting/releases)  
-[![Downloads](https://img.shields.io/pypi/dm/quantumvoting.svg?style=popout-square)](https://pypi.org/project/quantumvoting/)
+[![Release](https://img.shields.io/github/v/release/AdrianHarkness/NYUAD2025.svg?style=popout-square)](https://github.com/AdrianHarkness/NYUAD2025/releases)
+[![PyPI version](https://img.shields.io/pypi/v/sawty.svg?style=popout-square)](https://pypi.org/project/sawty/)
 
 ---
 
