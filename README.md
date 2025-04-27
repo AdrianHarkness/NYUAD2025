@@ -1,76 +1,128 @@
-# SAWTY | صوتي
-*Quantum Voting*
+# SAWTY | صوتي  
+*Quantum-Secure Electronic Voting*
 
-[![Release](https://img.shields.io/github/release/AdrianHarkness/quantumvoting.svg?style=popout-square)](https://github.com/AdrianHarkness/quantumvoting/releases)
+[![Release](https://img.shields.io/github/release/AdrianHarkness/quantumvoting.svg?style=popout-square)](https://github.com/AdrianHarkness/quantumvoting/releases)  
 [![Downloads](https://img.shields.io/pypi/dm/quantumvoting.svg?style=popout-square)](https://pypi.org/project/quantumvoting/)
+
+---
 
 ## Motivation
 
-**SAWTY**:  Privacy, security, authenticity
+**SAWTY**: Privacy, security, authenticity.
 
-“My Vote, My Voice” is building a fully quantum-secure electronic voting system that redefines trust in decision-making. We ensure end-to-end ballot security, anonymity, consensus, and voter authentication, setting a new global standard for trustworthy elections.
-*Please check out these slides for more [information](https://www.canva.com/design/DAGlxSn6JNY/dj9YdHfOwejP3PryE83FoA/view?utm_content=DAGlxSn6JNY&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h6b89bc681d).*
+"My Vote, My Voice" is building a fully quantum-secure electronic voting system that redefines trust in decision-making.  
+We ensure end-to-end ballot security, anonymity, consensus, and voter authentication, setting a new global standard for trustworthy elections.
+
+🔗 *Please check out these slides for more [information](https://www.canva.com/design/DAGlxSn6JNY/dj9YdHfOwejP3PryE83FoA/view?utm_content=DAGlxSn6JNY&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h6b89bc681d).*
+
+---
+
+## Features
+
+- 🔒 **Quantum Key Distribution (QKD)**: secure keys for ballot encryption.
+- ✍️ **Quantum-Safe Digital Signatures**: voter authentication without compromising anonymity.
+- 🗳️ **Encrypted, Anonymized Ballots**: votes are end-to-end encrypted with zero leakage.
+- 🛡️ **Blockchain Consensus**: votes are recorded only after a Byzantine agreement between tallying nodes.
+- 🧪 **Built-in Simulation Tools**: easily test small- to medium-scale elections with quantum-secure infrastructure.
+
+---
 
 ## Installation
 
-*Conda users, please make sure to `conda install pip` before running any pip installation if you want to install `qudra` into your conda environment.*
+```bash
+pip install sawty
+```
 
-`qudra` is published on PyPI. So, to install, simply run:
+Or clone the repository directly:
 
 ```bash
-pip install qudra
+git clone https://github.com/AdrianHarkness/quantumvoting.git
+cd quantumvoting
+pip install .
 ```
-If you also want to download the dependencies needed to run optional tutorials, please use `pip install qudra[dev]` or `pip install 'qudra[dev]'` (for `zsh` users).
 
+---
 
-To check if the installation was successful, run:
+## Usage Example
+
+You can quickly simulate a quantum-secure election by running:
 
 ```python
->>> import qudra
+from quantumvoting import Voter, Authenticator, Tallier, Blockchain
+import time
+
+# Define choices and voters
+CHOICES = ["YES", "NO", "ABSTAIN"]
+VOTER_CHOICES = {
+    "Aya": "YES",
+    "Bassem": "NO",
+    "Charlie": "ABSTAIN",
+    "Dana": "NO",
+    "Ella": "NO",
+}
+
+QKD_KEY_LENGTH = 32
+
+# Initialize nodes
+voters = [Voter(name, qkd_key_length=QKD_KEY_LENGTH) for name in VOTER_CHOICES.keys()]
+voter_dict = {voter.id: voter.public_key for voter in voters}
+auth = Authenticator("AuthNode", voter_dict, qkd_key_length=QKD_KEY_LENGTH)
+talliers = [Tallier(f"TallyNode{i+1}", qkd_key_length=QKD_KEY_LENGTH) for i in range(3)]
+blockchain = Blockchain(talliers)
+
+# Quantum key distribution
+for voter in voters:
+    voter.establish_qkd_channel(auth)
+    for tally in talliers:
+        voter.establish_qkd_channel(tally)
+for tally in talliers:
+    auth.establish_qkd_channel(tally)
+
+# Voting process
+for voter in voters:
+    voter.sign_identity()
+    choice = CHOICES.index(VOTER_CHOICES[voter.name])
+    vote_payload = voter.send_vote(choice, auth, talliers[0])
+    signature_hex, forwarded_vote = auth.forward_vote(vote_payload, talliers[0], voter)
+    for tally in talliers:
+        vote = tally.receive_vote(forwarded_vote, auth)
+        tally.add_vote(signature_hex, vote)
+
+# Blockchain and consensus
+snapshot = talliers[0].received_votes.copy()
+timestamp = time.time()
+blocks = [blockchain.propose_block(snapshot, t, fixed_creator="TallyConsensus", fixed_timestamp=timestamp) for t in talliers]
+
+if blockchain.byzantine_agreement(blocks):
+    blockchain.display_chain()
+    blockchain.save_json("blockchain.json")
+    blockchain.simple_majority()
 ```
 
-## Building from source
+---
 
-To build `qudra` from source, pip install using:
+## Project Status
 
-```bash
-git clone https://github.com/qcenergy/qudra.git
-cd qudra
-pip install --upgrade .
-```
+✅ Local voting simulation fully functional  
+✅ Quantum Key Distribution with Eve attack simulation  
+✅ Blockchain consensus + vote majority calculator  
+🕻 PyPI package publishing (done!)
 
-If you also want to download the dependencies needed to run optional tutorials, please use `pip install --upgrade .[dev]` or `pip install --upgrade '.[dev]'` (for `zsh` users).
+---
 
+## License
 
-#### Installation for Devs
+This project is licensed under the **MIT License**.  
+See the [LICENSE](https://opensource.org/licenses/MIT) file for details.
 
-If you intend to contribute to this project, please install `qudra` in editable mode as follows:
-```bash
-git clone https://github.com/qcenergy/qudra.git
-cd qudra
-pip install -e .[dev]
-```
+---
 
-python3 -m venv venv
-. venv/bin/activate
-Please use `pip install -e '.[dev]'` if you are a `zsh` user.
+## Acknowledgments
 
-#### Building documentation locally
+- Inspired by real-world challenges in **secure elections**.
+- Based on quantum information protocols such as **BB84** and **Byzantine Fault Tolerance**.
+- Built to serve both **academic research** and **real-world democracy**.
 
-Set yourself up to use the `[dev]` dependencies. Then, from the command line run:
-```bash
-mkdocs build
-```
+---
 
-Then, when you're ready to deploy, run:
-```bash
-mkdocs gh-deploy
-```
-
-## Acknowledgements
-
-**Core Devs:** [Asil Qraini](https://github.com/AsilQ), [Fouad Afiouni](https://github.com/fo-ui), [Gargi Chandrakar](https://github.com/gargi2718), [Nurgazy Seidaliev](https://github.com/nursei7), [Sahar Ben Rached](https://github.com/saharbenrached), [Salem Al Haddad](https://github.com/salemalhaddad), [Sarthak Prasad Malla](https://github.com/SarthakMalla1154)
-
-**Mentors:** [Akash Kant](https://github.com/akashkthkr), [Shantanu Jha](https://github.com/Phionx)
-
-This project was created at the [2022 NYUAD Hackathon](https://nyuad.nyu.edu/en/events/2022/march/nyuad-hackathon-event.html) for Social Good in the Arab World: Focusing on Quantum Computing (QC). 
+🌟 Your voice matters. Your vote should too. 🌟
