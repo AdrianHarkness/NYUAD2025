@@ -1,0 +1,23 @@
+Metadata-Version: 2.4
+Name: sawty
+Version: 0.1.0
+Summary: Quantum-secure blockchain-based voting system with QKD.
+Home-page: https://github.com/AdrianHarkness/NYUAD2025
+Author: NYUAD 2025 Team 6 SAWTY
+Author-email: shandlaes@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Topic :: Security :: Cryptography
+Classifier: Intended Audience :: Developers
+Requires-Python: >=3.8
+License-File: LICENSE.md
+Requires-Dist: qiskit
+Requires-Dist: cryptography
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
