@@ -13,17 +13,17 @@
 "My Vote, My Voice" is building a fully quantum-secure electronic voting system that redefines trust in decision-making.  
 We ensure end-to-end ballot security, anonymity, consensus, and voter authentication, setting a new global standard for trustworthy elections.
 
-🔗 *Please check out these slides for more [information](https://www.canva.com/design/DAGlxSn6JNY/dj9YdHfOwejP3PryE83FoA/view?utm_content=DAGlxSn6JNY&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h6b89bc681d).*
+[More information here](https://www.canva.com/design/DAGlxSn6JNY/dj9YdHfOwejP3PryE83FoA/view?utm_content=DAGlxSn6JNY&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h6b89bc681d)
 
 ---
 
 ## Features
 
-- 🔒 **Quantum Key Distribution (QKD)**: secure keys for ballot encryption.
-- ✍️ **Quantum-Safe Digital Signatures**: voter authentication without compromising anonymity.
-- 🗳️ **Encrypted, Anonymized Ballots**: votes are end-to-end encrypted with zero leakage.
-- 🛡️ **Blockchain Consensus**: votes are recorded only after a Byzantine agreement between tallying nodes.
-- 🧪 **Built-in Simulation Tools**: easily test small- to medium-scale elections with quantum-secure infrastructure.
+- **Quantum Key Distribution (QKD)**: secure keys for ballot encryption.
+- **Quantum-Safe Digital Signatures**: voter authentication without compromising anonymity.
+- **Encrypted, Anonymized Ballots**: votes are end-to-end encrypted with zero leakage.
+- **Blockchain Consensus**: votes are recorded only after a Byzantine agreement between tallying nodes.
+- **Built-in Simulation Tools**: easily test small- to medium-scale elections with quantum-secure infrastructure.
 
 ---
 
