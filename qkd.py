@@ -2,11 +2,17 @@ import random
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
 
-def create_shared_key(desired_key_length):
+session_counter = 0
+
+def create_shared_key(desired_key_length, node1, node2):
     """
     Simulates the BB84 protocol to generate a shared key of a specified length.
     Continues the simulation until the desired number of matching bases is achieved.
     """
+    global session_counter
+    session_counter += 1
+    print(f"\n--- QKD Session: {node1} ↔ {node2} ---\n")
+
     backend = AerSimulator()
     sifted_key = []
     total_qubits = 0
@@ -59,5 +65,5 @@ def create_shared_key(desired_key_length):
     return sifted_key
 
 if __name__ == "__main__":
-    desired_key_length = 5  # Desired length of the sifted key
+    desired_key_length = 32  # Desired length of the sifted key
     create_shared_key(desired_key_length)

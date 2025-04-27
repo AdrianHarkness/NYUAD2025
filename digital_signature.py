@@ -4,7 +4,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 
 
-def generate_keys(key_size):
+def generate_keys(key_size=1024):
     """
     Generates a pair of RSA keys (public and private) and saves them to files.
     The private key is saved in PKCS8 format, and the public key is saved in SubjectPublicKeyInfo format.
