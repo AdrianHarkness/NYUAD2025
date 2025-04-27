@@ -10,8 +10,8 @@ QKD_KEY_LENGTH = 32
 
 def simulate_voting():
     # setup nodes
-    alice = Voter("Aya", qkd_key_length=QKD_KEY_LENGTH)
-    auth = Authenticator("AuthNode", {alice.id: alice.public_key}, qkd_key_length=QKD_KEY_LENGTH)
+    aya = Voter("Aya", qkd_key_length=QKD_KEY_LENGTH)
+    auth = Authenticator("AuthNode", {aya.id: aya.public_key}, qkd_key_length=QKD_KEY_LENGTH)
     tally1 = Tallier("TallyNode1", qkd_key_length=QKD_KEY_LENGTH)
     tally2 = Tallier("TallyNode2", qkd_key_length=QKD_KEY_LENGTH)
     tally3 = Tallier("TallyNode3", qkd_key_length=QKD_KEY_LENGTH)
@@ -20,17 +20,17 @@ def simulate_voting():
     blockchain = Blockchain(talliers)
 
     # setup QKD channels
-    alice.establish_qkd_channel(auth)
+    aya.establish_qkd_channel(auth)
     for tally in talliers:
-        alice.establish_qkd_channel(tally)
+        aya.establish_qkd_channel(tally)
         auth.establish_qkd_channel(tally)
 
-    # 1. Alice signs identity & sends vote
-    alice.sign_identity()
-    vote_payload = alice.send_vote(VOTE_INDEX, auth, talliers[0])  # fixed: one output only
+    # 1. Aya signs identity & sends vote
+    aya.sign_identity()
+    vote_payload = aya.send_vote(VOTE_INDEX, auth, talliers[0])  # fixed: one output only
 
     # 2. authenticator verifies and forwards
-    signature_hex, forwarded_vote = auth.forward_vote(vote_payload, talliers[0], alice)
+    signature_hex, forwarded_vote = auth.forward_vote(vote_payload, talliers[0], aya)
 
     # 3. tally receives and adds vote
     vote = talliers[0].receive_vote(forwarded_vote, auth)
