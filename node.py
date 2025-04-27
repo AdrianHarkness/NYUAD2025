@@ -22,6 +22,9 @@ class Node:
         return self.qkd_channels.get(other_node.name)
 
     def send_message(self, to_node, message_bits):
+        """
+        Encrypt a bitstring message using the shared key and send to another node.
+        """
         key = self.get_shared_key(to_node)
         if key is None:
             raise Exception(f"No QKD key established between {self.name} and {to_node.name}")
@@ -29,6 +32,9 @@ class Node:
         return encode_bitstring(message_bits, key)
 
     def receive_message(self, from_node, encoded_message):
+        """
+        Decrypt an incoming bitstring message from another node using the shared key.
+        """
         key = self.get_shared_key(from_node)
         if key is None:
             raise Exception(f"No QKD key established between {self.name} and {from_node.name}")

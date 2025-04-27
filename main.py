@@ -6,11 +6,11 @@ from blockchain import Blockchain
 CHOICES = ["YES", "NO", "ABSTAIN"]
 VOTER_CHOICE = "YES"
 VOTE_INDEX = CHOICES.index(VOTER_CHOICE)
-QKD_KEY_LENGTH = 32  # quantum key length (for encrypting messages between nodes)
+QKD_KEY_LENGTH = 32
 
 def simulate_voting():
     # setup nodes
-    alice = Voter("Alice", qkd_key_length=QKD_KEY_LENGTH)
+    alice = Voter("Aya", qkd_key_length=QKD_KEY_LENGTH)
     auth = Authenticator("AuthNode", {alice.id: alice.public_key}, qkd_key_length=QKD_KEY_LENGTH)
     tally1 = Tallier("TallyNode1", qkd_key_length=QKD_KEY_LENGTH)
     tally2 = Tallier("TallyNode2", qkd_key_length=QKD_KEY_LENGTH)
